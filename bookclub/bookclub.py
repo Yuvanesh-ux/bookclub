@@ -5,9 +5,9 @@ from langchain import OpenAI, VectorDBQA
 from langchain.document_loaders import PagedPDFSplitter
 from langchain.document_loaders import WebBaseLoader
 from langchain.agents import initialize_agent, Tool
-from langchain.tools import BaseTool
 from langchain.llms import OpenAI
-from langchain import LLMMathChain, SerpAPIWrapper
+from dotenv import load_dotenv
+import os
 import numpy as np
 
 class Bookclub:
@@ -25,20 +25,11 @@ class Bookclub:
             texts = text_splitter.split_documents(documents)
 
             print("Embedding!")
-            # try:
-            embeddings = np.load(embedding_path, allow_pickle=True)
-            print("Found embeddings on disk")
-
-            # except BaseException:
-            #     print("Embeddings not found! embedding using OpenAI")
-            #     embeddings = OpenAIEmbeddings(openai_api_key=self.open_api_key)
-            #     np.save(f'{doc_path[:-4]}_embeddings.npy', np.array(embeddings))
+            embeddings = OpenAIEmbeddings(openai_api_key=self.open_api_key)
 
             docsearch = Chroma.from_documents(texts, embeddings, collection_name="lotf-text")
 
             return docsearch
-        
-        
         
         lotf_agent = VectorDBQA.from_chain_type(llm=self.llm, chain_type="stuff", vectorstore=book_embeddor(doc_path=doc_path, embedding_path=embedding_path))
 
@@ -56,8 +47,10 @@ class Bookclub:
         return agent
 
 if __name__ == '__main__':
-    bookclub = Bookclub("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")
-    lotf_agent = bookclub.qa_bot('./lotf_text.pdf', './lotf_text_embeddings.npy')
+    load_dotenv()
 
-    print(lotf_agent.run("Who is jack"))
+    bookclub = Bookclub(os.getenv('OPENAI_API_KEY'))
+    lotf_agent = bookclub.qa_bot('data/lotf_text.pdf')
+
+    print(lotf_agent.run("What happened during the latter half of chapter 3"))
 

@@ -1,0 +1,5 @@
+langchain
+pypdf
+openai
+chromadb
+numpy
