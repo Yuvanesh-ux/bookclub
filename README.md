@@ -1,4 +1,7 @@
 # bookclub
 
-## Get an AI-powered fellow bookworm
+## Get your own AI-powered bookworm
 
+
+
+### Powered by langchain
