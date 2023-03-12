@@ -3,7 +3,6 @@ from langchain.vectorstores import Chroma
 from langchain.text_splitter import CharacterTextSplitter
 from langchain import OpenAI, VectorDBQA
 from langchain.document_loaders import PagedPDFSplitter
-from langchain.document_loaders import WebBaseLoader
 from langchain.agents import initialize_agent, Tool
 from langchain.llms import OpenAI
 from dotenv import load_dotenv
